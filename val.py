@@ -25,7 +25,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-
+from utils.torch_utils import prune
 import numpy as np
 import torch
 from tqdm import tqdm
@@ -125,6 +125,7 @@ def run(
         plots=True,
         callbacks=Callbacks(),
         compute_loss=None,
+        prune_val=None
 ):
     # Initialize/load model and set device
     training = model is not None
@@ -155,6 +156,8 @@ def run(
         # Data
         data = check_dataset(data)  # check
 
+    if prune_val is not None:
+       prune(model,prune_val)
     # Configure
     model.eval()
     cuda = device.type != 'cpu'
@@ -342,6 +345,7 @@ def parse_opt():
     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='dataset.yaml path')
     parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5s.pt', help='model path(s)')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
+    parser.add_argument('--prune_val', type=float, default=None, help='prune value')
     parser.add_argument('--imgsz', '--img', '--img-size', type=int, default=640, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.001, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.6, help='NMS IoU threshold')
