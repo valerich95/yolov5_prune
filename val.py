@@ -160,7 +160,7 @@ def run(
        prune(model,prune_val)
     # Configure
     model.eval()
-    print("Model Parameters: ", sum(p.numel() for p in model.parameters())))
+    print("Model Parameters: ", sum(p.numel() for p in model.parameters()))
     cuda = device.type != 'cpu'
     is_coco = isinstance(data.get('val'), str) and data['val'].endswith(f'coco{os.sep}val2017.txt')  # COCO dataset
     nc = 1 if single_cls else int(data['nc'])  # number of classes
